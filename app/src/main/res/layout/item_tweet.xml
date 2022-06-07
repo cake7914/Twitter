@@ -21,16 +21,48 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
-        android:layout_toEndOf="@+id/ivProfileImage"
-        tools:text="lily_jackson" />
+        android:layout_toEndOf="@+id/tvProfileName"
+        tools:text="\@lily_jackson" />
 
     <TextView
         android:id="@+id/tvBody"
-        android:layout_width="wrap_content"
+        android:layout_width="341dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvScreenName"
+        android:layout_alignParentEnd="true"
         android:layout_marginStart="5dp"
         android:layout_marginTop="2dp"
+        android:layout_marginEnd="6dp"
         android:layout_toEndOf="@+id/ivProfileImage"
         tools:text="this is my first tweet!" />
+
+    <ImageView
+        android:id="@+id/ivMedia"
+        android:layout_width="343dp"
+        android:layout_height="294dp"
+        android:layout_below="@+id/tvBody"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="4dp"
+        android:layout_toEndOf="@+id/ivProfileImage"
+        android:visibility="gone"
+        tools:srcCompat="@tools:sample/avatars"
+        tools:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tvProfileName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:layout_toEndOf="@+id/ivProfileImage"
+        tools:text="Lily Jackson" />
+
+    <TextView
+        android:id="@+id/tvTimeStamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@+id/tvScreenName"
+        tools:text="~17h" />
 </RelativeLayout>

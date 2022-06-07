@@ -6,5 +6,6 @@
     <string name="intent_scheme">oauth</string>
     <string name="intent_host">codepathtweets</string>
     <string name="tweet">TWEET</string>
+    <string name="handle_identifier">\@</string>
 
 </resources>
