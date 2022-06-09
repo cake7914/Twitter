@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".TimelineActivity">
 
+    <Button
+        android:id="@+id/bLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="9dp"
+        android:layout_marginBottom="15dp"
+        android:onClick="onLogoutButton"
+        android:text="Logout" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeContainer"
         android:layout_width="match_parent"
@@ -16,16 +25,30 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="0dp" />
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <Button
-        android:id="@+id/bLogout"
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="-50dp"
+        android:layout_marginBottom="693dp">
+
+    </FrameLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="9dp"
-        android:layout_marginBottom="15dp"
-        android:onClick="onLogoutButton"
-        android:text="Logout" />
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="#F5F5F5"
+        android:src="@drawable/ic_vector_compose"
+        android:tint="@color/twitter_blue"
+        app:fabSize="normal" />
+
 </RelativeLayout>

@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.codepath.apps.restclienttemplate.databinding.ActivityComposeBinding;
+import com.codepath.apps.restclienttemplate.databinding.ActivityTweetDetailsBinding;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
@@ -24,22 +26,36 @@ public class ComposeActivity extends AppCompatActivity {
     public static final int MAX_TWEET_LENGTH = 280;
     public static final String TAG = "ComposeActivity";
 
+    private ActivityComposeBinding binding;
+
     EditText etCompose;
     Button btnTweet;
     TwitterClient client;
     ImageView ivProfile;
+    Boolean reply;
+    Tweet tweet;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_compose);
+        binding = ActivityComposeBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
 
         client = TwitterApp.getRestClient(this);
 
         etCompose = findViewById(R.id.etCompose);
         btnTweet = findViewById(R.id.btnTweet);
         ivProfile = findViewById(R.id.ivProfilePic);
+
+        reply = getIntent().getBooleanExtra("reply", false);
+        tweet = Parcels.unwrap(getIntent().getParcelableExtra(Tweet.class.getSimpleName()));
+
+        if(reply)
+        {
+            etCompose.setText("@" + tweet.user.screenName);
+        }
 
         // populate profile pic
 

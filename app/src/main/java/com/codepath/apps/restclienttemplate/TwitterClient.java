@@ -3,6 +3,7 @@ package com.codepath.apps.restclienttemplate;
 import static com.codepath.apps.restclienttemplate.BuildConfig.CONSUMER_KEY;
 import static com.codepath.apps.restclienttemplate.BuildConfig.CONSUMER_SECRET;
 
+import android.app.DownloadManager;
 import android.content.Context;
 
 import com.codepath.asynchttpclient.RequestParams;
@@ -70,6 +71,35 @@ public class TwitterClient extends OAuthBaseClient {
 		params.put("status", tweetContent);
 		client.post(apiUrl, params, "", handler);
 	}
+
+	public void likeTweet(Long tweet_id, JsonHttpResponseHandler handler){
+		String apiUrl = getApiUrl("/favorites/create.json");
+		RequestParams params = new RequestParams();
+		params.put("id", tweet_id);
+		client.post(apiUrl, params, "", handler);
+	}
+
+	public void unlikeTweet(Long tweet_id, JsonHttpResponseHandler handler){
+		String apiUrl = getApiUrl("/favorites/destroy.json");
+		RequestParams params = new RequestParams();
+		params.put("id", tweet_id);
+		client.post(apiUrl, params, "", handler);
+	}
+
+	public void retweetTweet(Long tweet_id, JsonHttpResponseHandler handler){
+		String apiUrl = getApiUrl("statuses/retweet/:"+ tweet_id + ".json");
+		RequestParams params = new RequestParams();
+		client.post(apiUrl, params, "", handler);
+	}
+
+	public void unretweetTweet(Long tweet_id, JsonHttpResponseHandler handler){
+		String apiUrl = getApiUrl("statuses/unretweet/:"+ tweet_id + ".json");
+		RequestParams params = new RequestParams();
+		client.post(apiUrl, params, "", handler);
+	}
+
+
+
 
 	// Get the user's profile pic
 	public void getProfilePhoto(JsonHttpResponseHandler handler) {

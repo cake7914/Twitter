@@ -75,7 +75,6 @@ public class Tweet {
         {
             tweet.original_tweet = null;
         }
-
         return tweet;
     }
 
