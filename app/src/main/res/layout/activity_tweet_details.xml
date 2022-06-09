@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".TweetDetailsActivity">
 
+    <ImageView
+        android:id="@+id/ivVerified2"
+        android:layout_width="19dp"
+        android:layout_height="17dp"
+        android:layout_marginStart="6dp"
+        android:layout_toEndOf="@+id/tvName"
+        android:contentDescription="@string/verified_symbol"
+        android:visibility="gone"
+        app:srcCompat="@drawable/ic_twitter_verified_badge"
+        tools:visibility="visible" />
+
     <TextView
         android:id="@+id/tvFavorites"
         android:layout_width="wrap_content"

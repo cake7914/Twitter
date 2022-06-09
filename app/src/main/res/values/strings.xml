@@ -8,5 +8,12 @@
     <string name="tweet">TWEET</string>
     <string name="handle_identifier">\@</string>
     <string name="compose">Compose</string>
+    <string name="share_button">share button</string>
+    <string name="reply_button">reply button</string>
+    <string name="retweet_button">retweet button</string>
+    <string name="media_image">media image</string>
+    <string name="profile_picture">profile picture</string>
+    <string name="like_button">like button</string>
+    <string name="verified_symbol">verified symbol</string>
 
 </resources>

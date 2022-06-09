@@ -20,6 +20,7 @@ public class TweetDetailsActivity extends AppCompatActivity {
 
     ImageView ivProfile;
     ImageView ivMedia;
+    ImageView ivVerified;
     TextView tvUserName;
     TextView tvName;
     TextView tvFullText;
@@ -45,6 +46,7 @@ public class TweetDetailsActivity extends AppCompatActivity {
         tvDate = binding.tvDatePosted;
         tvRetweets = binding.tvRetweets;
         tvFavorites = binding.tvFavorites;
+        ivVerified = binding.ivVerified2;
 
         tweet = Parcels.unwrap(getIntent().getParcelableExtra(Tweet.class.getSimpleName()));
 
@@ -63,7 +65,12 @@ public class TweetDetailsActivity extends AppCompatActivity {
         tvDate.setText(tweet.createdAt.substring(4, 7) + "/" + tweet.createdAt.substring(8, 10)  + "/" + tweet.createdAt.substring(28, 30));
         tvTime.setText(tweet.createdAt.substring(11, 16));
         tvRetweets.setText(String.valueOf(tweet.retweet_count + " Retweets"));
-        tvFavorites.setText(String.valueOf(tweet.favorite_count) + " Likes");
+        tvFavorites.setText(tweet.favorite_count + " Likes");
 
+        if (tweet.user.verified) {
+            ivVerified.setVisibility(View.VISIBLE);
+        } else {
+            ivVerified.setVisibility(View.GONE);
+        }
     }
 }

@@ -11,9 +11,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.codepath.apps.restclienttemplate.databinding.ActivityComposeBinding;
 import com.codepath.apps.restclienttemplate.databinding.ActivityTweetDetailsBinding;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.models.User;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.json.JSONException;
@@ -34,6 +37,7 @@ public class ComposeActivity extends AppCompatActivity {
     ImageView ivProfile;
     Boolean reply;
     Tweet tweet;
+    User current_user;
 
 
     @Override
@@ -58,6 +62,21 @@ public class ComposeActivity extends AppCompatActivity {
         }
 
         // populate profile pic
+        client.getCurrentUser(new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                try {
+                    current_user = User.fromJson(json.jsonObject);
+                    Glide.with(ComposeActivity.this).load(current_user.profileImageUrl).transform(new RoundedCorners(90)).into(ivProfile);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                Log.e(TAG, "Failure to get current user + profile picture");
+            }
+        });
 
 
         // Set a click listener on the button

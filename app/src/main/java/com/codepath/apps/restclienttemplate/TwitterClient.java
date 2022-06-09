@@ -98,12 +98,8 @@ public class TwitterClient extends OAuthBaseClient {
 		client.post(apiUrl, params, "", handler);
 	}
 
-
-
-
-	// Get the user's profile pic
-	public void getProfilePhoto(JsonHttpResponseHandler handler) {
-		String apiUrl = getApiUrl("users/show.json");
+	public void getCurrentUser(JsonHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("account/verify_credentials.json");
 		RequestParams params = new RequestParams();
 		client.get(apiUrl, params, handler);
 	}
