@@ -1,10 +1,12 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -56,6 +58,11 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         notifyDataSetChanged();
     }
 
+    public void add(Tweet tweet) {
+        tweets.add(tweet);
+        notifyDataSetChanged();
+    }
+
     // Add a list of items -- change to type used
     public void addAll(List<Tweet> list) {
         tweets.addAll(list);
@@ -71,6 +78,14 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         ImageView ivMedia;
         TextView tvProfileName;
         TextView tvTimeStamp;
+        TextView tvReplyCount;
+        TextView tvRetweetCount;
+        TextView tvFavoriteCount;
+        ImageButton btnRetweet;
+        ImageButton btnLike;
+        ImageButton btnLikePressed;
+        ImageView ivVerified;
+        TextView tvRetweetedStatus;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -80,23 +95,77 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             ivMedia = itemView.findViewById(R.id.ivMedia);
             tvProfileName = itemView.findViewById(R.id.tvProfileName);
             tvTimeStamp = itemView.findViewById(R.id.tvTimeStamp);
+            tvReplyCount = itemView.findViewById(R.id.tvReplyCount);
+            tvRetweetCount = itemView.findViewById(R.id.tvRetweetCount);
+            tvFavoriteCount = itemView.findViewById(R.id.tvFavoriteCount);
+            btnRetweet = itemView.findViewById(R.id.btnRetweet);
+            btnLike = itemView.findViewById(R.id.btnLike);
+            btnLikePressed = itemView.findViewById(R.id.btnLikePressed);
+            ivVerified = itemView.findViewById(R.id.ivVerified);
+            tvRetweetedStatus = itemView.findViewById(R.id.tvRetweetedStatus);
         }
 
-        public void bind(Tweet tweet) {
+        public void bindTweet(Tweet tweet)
+        {
             tvBody.setText(tweet.body);
-            tvScreenName.setText("@"+tweet.user.screenName);
-            tvProfileName.setText(tweet.user.name);
-            tvTimeStamp.setText(tweet.time_stamp);
-            Log.i("TWEET", tweet.time_stamp);
-            Glide.with(context).load(tweet.user.profileImageUrl).transform(new RoundedCorners(90)).into(ivProfileImage);
-            if(tweet.media != null)
+            // if name is too long, put ... on the end so that everything can fit
+            if(tweet.user.name.length() > 20)
             {
-                Glide.with(context).load(tweet.media).transform(new RoundedCorners(30)).into(ivMedia);
-                ivMedia.setVisibility(View.VISIBLE);
+                tvProfileName.setText(tweet.user.name.substring(0, 15) + "...");
             }
             else
             {
+                tvProfileName.setText(tweet.user.name);
+            }
+            tvScreenName.setText("@" + tweet.user.screenName + " •");
+            tvTimeStamp.setText(tweet.time_stamp);
+
+            tvRetweetCount.setText(String.valueOf(tweet.retweet_count));
+            if (tweet.retweeted) {
+                btnRetweet.setColorFilter(Color.rgb(23, 191, 99));
+            } else {
+                btnRetweet.setColorFilter(Color.rgb(170, 184, 194));
+            }
+
+            tvFavoriteCount.setText(String.valueOf(tweet.favorite_count));
+            if (tweet.favorited) {
+                btnLike.setVisibility(View.INVISIBLE);
+                btnLikePressed.setVisibility(View.VISIBLE);
+            } else {
+                btnLike.setVisibility(View.VISIBLE);
+                btnLikePressed.setVisibility(View.INVISIBLE);
+            }
+
+            if (tweet.user.verified) {
+                ivVerified.setVisibility(View.VISIBLE);
+            } else {
+                ivVerified.setVisibility(View.GONE);
+            }
+
+            Glide.with(context).load(tweet.user.profileImageUrl).transform(new RoundedCorners(90)).into(ivProfileImage);
+            if (tweet.media != null) {
+                Glide.with(context).load(tweet.media).override(500, 500).centerCrop().transform(new RoundedCorners(30)).into(ivMedia);
+                ivMedia.setVisibility(View.VISIBLE);
+            } else {
+                ivMedia.setImageURI(null);
                 ivMedia.setVisibility(View.GONE);
+            }
+        }
+
+
+        public void bind(Tweet tweet) {
+            //this is a retweet
+            if(tweet.original_tweet != null)
+            {
+                bindTweet(tweet.original_tweet);
+                // set retweet user above the original tweet
+                tvRetweetedStatus.setText("\uD83D\uDD01" + tweet.user.name + " Retweeted");
+                tvRetweetedStatus.setVisibility(View.VISIBLE);
+            }
+            else // this is a normal tweet
+            {
+                bindTweet(tweet);
+                tvRetweetedStatus.setVisibility(View.GONE);
             }
         }
     }

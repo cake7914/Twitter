@@ -11,6 +11,9 @@ public class User {
     public String screenName;
     public String profileImageUrl;
     public String profileName;
+    public boolean verified;
+    public Integer followers_count;
+    public Integer friends_count;
 
     // empty constructor needed by the Parceler library
     public User() {}
@@ -21,6 +24,9 @@ public class User {
         user.screenName = jsonObject.getString("screen_name");
         user.profileImageUrl = jsonObject.getString("profile_image_url_https");
         user.profileName = jsonObject.getString("name");
+        user.verified = jsonObject.getBoolean("verified");
+        user.followers_count = jsonObject.getInt("followers_count");
+        user.friends_count = jsonObject.getInt("friends_count");
         return user;
     }
 }

@@ -49,8 +49,17 @@ public class TwitterClient extends OAuthBaseClient {
 	public void getHomeTimeline(JsonHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("statuses/home_timeline.json");
 		RequestParams params = new RequestParams();
-		params.put("count", 75);
-		params.put("since_id", 1);
+		params.put("count", 100);
+		params.put("tweet_mode", "extended");
+		client.get(apiUrl, params, handler);
+	}
+
+	public void getTweets(Integer numTweets, Long max_id, JsonHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("statuses/home_timeline.json");
+		RequestParams params = new RequestParams();
+		params.put("count", numTweets);
+		//tweets need to be taken from before the last taken tweet was
+		params.put("max_id", max_id-1);
 		params.put("tweet_mode", "extended");
 		client.get(apiUrl, params, handler);
 	}
@@ -60,6 +69,13 @@ public class TwitterClient extends OAuthBaseClient {
 		RequestParams params = new RequestParams();
 		params.put("status", tweetContent);
 		client.post(apiUrl, params, "", handler);
+	}
+
+	// Get the user's profile pic
+	public void getProfilePhoto(JsonHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("users/show.json");
+		RequestParams params = new RequestParams();
+		client.get(apiUrl, params, handler);
 	}
 
 	/* 1. Define the endpoint URL with getApiUrl and pass a relative path to the endpoint

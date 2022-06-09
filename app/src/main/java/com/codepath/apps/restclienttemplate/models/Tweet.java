@@ -26,6 +26,13 @@ public class Tweet {
     public User user;
     public String media;
     public String time_stamp;
+    public Long id;
+    public Integer favorite_count;
+    public Integer retweet_count;
+    public Integer reply_count;
+    public boolean favorited;
+    public boolean retweeted;
+    public Tweet original_tweet;
 
     // empty constructor needed by the Parceler library
     public Tweet() {}
@@ -39,6 +46,7 @@ public class Tweet {
         }
         tweet.createdAt = jsonObject.getString("created_at");
         tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
+        tweet.id = jsonObject.getLong("id");
 
         // Get the entities object
         JSONObject entitiesObject = jsonObject.getJSONObject("entities");
@@ -51,6 +59,23 @@ public class Tweet {
 
         //Setting the time stamp
         tweet.time_stamp = getRelativeTimeStamp(tweet.createdAt);
+
+        // Setting the various quantitative aspects of the tweet
+        tweet.retweet_count = jsonObject.getInt("retweet_count");
+        tweet.favorite_count = jsonObject.getInt("favorite_count");
+        //tweet.reply_count = jsonObject.getInt("reply_count");
+        tweet.favorited = jsonObject.getBoolean("favorited");
+        tweet.retweeted = jsonObject.getBoolean("retweeted");
+
+        if (jsonObject.has("retweeted_status"))
+        {
+            tweet.original_tweet = Tweet.fromJson(jsonObject.getJSONObject("retweeted_status"));
+        }
+        else
+        {
+            tweet.original_tweet = null;
+        }
+
         return tweet;
     }
 
@@ -65,7 +90,6 @@ public class Tweet {
 
     public static String getRelativeTimeStamp(String jsonCreatedAt)
     {
-        Log.i("JSON DATE ", jsonCreatedAt);
         String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
         SimpleDateFormat sfDate = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
         sfDate.setLenient(true);
@@ -73,7 +97,7 @@ public class Tweet {
         try {
             long timeStamp = sfDate.parse(jsonCreatedAt).getTime();
             long now = System.currentTimeMillis();
-            final long diff = timeStamp - now;
+            final long diff = now - timeStamp;
 
             if(diff < MINUTE_MILLIS)
             {

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
@@ -26,6 +27,7 @@ public class ComposeActivity extends AppCompatActivity {
     EditText etCompose;
     Button btnTweet;
     TwitterClient client;
+    ImageView ivProfile;
 
 
     @Override
@@ -37,6 +39,10 @@ public class ComposeActivity extends AppCompatActivity {
 
         etCompose = findViewById(R.id.etCompose);
         btnTweet = findViewById(R.id.btnTweet);
+        ivProfile = findViewById(R.id.ivProfilePic);
+
+        // populate profile pic
+
 
         // Set a click listener on the button
         btnTweet.setOnClickListener(new View.OnClickListener() {

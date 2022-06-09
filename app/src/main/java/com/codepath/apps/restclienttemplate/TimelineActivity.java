@@ -2,8 +2,10 @@ package com.codepath.apps.restclienttemplate;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
@@ -32,6 +34,7 @@ public class TimelineActivity extends AppCompatActivity {
     public static final String TAG = "TimelineActivity";
     private final int REQUEST_CODE = 20;
     private SwipeRefreshLayout swipeContainer;
+    private EndlessRecyclerViewScrollListener scrollListener;
 
     TwitterClient client;
     RecyclerView rvTweets;
@@ -69,10 +72,53 @@ public class TimelineActivity extends AppCompatActivity {
         // Initiate the list of tweets and adapter
         tweets = new ArrayList<>();
         adapter = new TweetsAdapter(this, tweets);
+
         // Recycler View setup: layout manager and the adapter
-        rvTweets.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        rvTweets.setLayoutManager(linearLayoutManager);
+
         rvTweets.setAdapter(adapter);
+
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                loadNextDataFromApi(page);
+            }
+        };
+        // Adds the scroll listener to RecyclerView
+        rvTweets.addOnScrollListener(scrollListener);
+
         populateHomeTimeline();
+    }
+
+    // Append the next page of data into the adapter
+    // This method probably sends out a network request and appends new data items to your adapter.
+    public void loadNextDataFromApi(int offset) {
+        // Send an API request to retrieve appropriate paginated data
+        //  --> Send the request including an offset value (i.e `page`) as a query parameter.
+        //  --> Deserialize and construct new model objects from the API response
+        //  --> Append the new data objects to the existing set of items inside the array of items
+        //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
+        client.getTweets(offset, tweets.get(tweets.size()-1).id, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                try {
+                    List<Tweet> tweets = Tweet.fromJsonArray(json.jsonArray);
+                    for(int i = 0; i < tweets.size(); i++)
+                    {
+                        adapter.add(tweets.get(i));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                Log.d("DEBUG", "Fetch infinite tweets error: " + response);
+            }
+        });
     }
 
     public void fetchTimelineAsync(int page) {
@@ -87,7 +133,10 @@ public class TimelineActivity extends AppCompatActivity {
                 // ...the data has come back, add new items to your adapter...
                 try {
                     List<Tweet> tweets = Tweet.fromJsonArray(json.jsonArray);
-                    adapter.addAll(tweets);
+                    for(int i = 0; i < tweets.size(); i++)
+                    {
+                        adapter.add(tweets.get(i));
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -145,9 +194,12 @@ public class TimelineActivity extends AppCompatActivity {
                 Log.i(TAG, "onSuccess!" + json.toString());
                 JSONArray jsonArray = json.jsonArray;
                 try {
-                    tweets.addAll(Tweet.fromJsonArray(jsonArray));
+                    List<Tweet> newTweets = Tweet.fromJsonArray(json.jsonArray);
+                    for(int i = 0; i < newTweets.size(); i++)
+                    {
+                        tweets.add(newTweets.get(i));
+                    }
                     adapter.notifyDataSetChanged();
-
                 } catch (JSONException e) {
                     Log.e(TAG, "Json exception", e);
                     e.printStackTrace();
@@ -173,3 +225,4 @@ public class TimelineActivity extends AppCompatActivity {
         startActivity(i);
     }
 }
+
