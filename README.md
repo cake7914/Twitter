@@ -51,6 +51,7 @@ The following **additional** features are implemented:
 Here's a walkthrough of implemented user stories:
 
 ![](ezgif.com-gif-maker.gif)
+
 ![](ezgif.com-gif-maker (1).gif)
 
 ## Notes
