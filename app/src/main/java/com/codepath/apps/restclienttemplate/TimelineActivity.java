@@ -47,7 +47,7 @@ public class TimelineActivity extends AppCompatActivity {
     RecyclerView rvTweets;
     List<Tweet> tweets;
     TweetsAdapter adapter;
-
+    MenuItem miActionProgressItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +77,7 @@ public class TimelineActivity extends AppCompatActivity {
 
         // Find the Recycler View
         rvTweets = binding.rvTweets;
+
         // Initiate the list of tweets and adapter
         tweets = new ArrayList<>();
         adapter = new TweetsAdapter(this, tweets);
@@ -171,8 +172,19 @@ public class TimelineActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        miActionProgressItem = menu.findItem(R.id.miActionProgress);
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    public void showProgressBar() {
+        // Show progress item
+        miActionProgressItem.setVisible(true);
+    }
+
+    public void hideProgressBar() {
+        // Hide progress item
+        miActionProgressItem.setVisible(false);
     }
 
     @Override
@@ -206,9 +218,8 @@ public class TimelineActivity extends AppCompatActivity {
                     List<Tweet> newTweets = Tweet.fromJsonArray(json.jsonArray);
                     for(int i = 0; i < newTweets.size(); i++)
                     {
-                        tweets.add(newTweets.get(i));
+                        adapter.add(newTweets.get(i));
                     }
-                    adapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     Log.e(TAG, "Json exception", e);
                     e.printStackTrace();
@@ -225,7 +236,6 @@ public class TimelineActivity extends AppCompatActivity {
     public void onLogoutButton(View view) {
         // Forget who is logged in
         TwitterApp.getRestClient(this).clearAccessToken();
-
         // Navigate backwards to Login screen
         Intent i = new Intent(this, LoginActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

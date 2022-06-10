@@ -50,7 +50,7 @@ public class TwitterClient extends OAuthBaseClient {
 	public void getHomeTimeline(JsonHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("statuses/home_timeline.json");
 		RequestParams params = new RequestParams();
-		params.put("count", 100);
+		params.put("count", 25);
 		params.put("tweet_mode", "extended");
 		client.get(apiUrl, params, handler);
 	}
@@ -87,13 +87,13 @@ public class TwitterClient extends OAuthBaseClient {
 	}
 
 	public void retweetTweet(Long tweet_id, JsonHttpResponseHandler handler){
-		String apiUrl = getApiUrl("statuses/retweet/:"+ tweet_id + ".json");
+		String apiUrl = getApiUrl("statuses/retweet/"+ tweet_id + ".json");
 		RequestParams params = new RequestParams();
 		client.post(apiUrl, params, "", handler);
 	}
 
 	public void unretweetTweet(Long tweet_id, JsonHttpResponseHandler handler){
-		String apiUrl = getApiUrl("statuses/unretweet/:"+ tweet_id + ".json");
+		String apiUrl = getApiUrl("statuses/unretweet/"+ tweet_id + ".json");
 		RequestParams params = new RequestParams();
 		client.post(apiUrl, params, "", handler);
 	}

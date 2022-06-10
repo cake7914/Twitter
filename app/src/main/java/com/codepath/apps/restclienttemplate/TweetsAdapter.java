@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.models.User;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.parceler.Parcels;
@@ -62,18 +63,21 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     // Clean all elements of the recycler
     public void clear() {
         tweets.clear();
+        notifyItemRangeRemoved(0, tweets.size()-1);
         notifyDataSetChanged();
     }
 
     public void add(Tweet tweet) {
         tweets.add(tweet);
-        notifyDataSetChanged();
+        notifyItemInserted(tweets.size()-1);
+        //notifyDataSetChanged();
     }
 
     // Add a list of items -- change to type used
     public void addAll(List<Tweet> list) {
         tweets.addAll(list);
-        notifyDataSetChanged();
+        notifyItemRangeInserted(tweets.size()-1-list.size(), list.size());
+        //notifyDataSetChanged();
     }
 
 
@@ -198,6 +202,8 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                                 tweet.favorited = true;
                                 btnLike.setVisibility(View.INVISIBLE);
                                 btnLikePressed.setVisibility(View.VISIBLE);
+                                tweet.favorite_count++;
+                                tvFavoriteCount.setText(String.valueOf(tweet.favorite_count));
                             }
 
                             @Override
@@ -219,6 +225,8 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                             tweet.favorited = false;
                             btnLike.setVisibility(View.VISIBLE);
                             btnLikePressed.setVisibility(View.INVISIBLE);
+                            tweet.favorite_count--;
+                            tvFavoriteCount.setText(String.valueOf(tweet.favorite_count));
                         }
 
                         @Override
@@ -239,11 +247,13 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                             public void onSuccess(int statusCode, Headers headers, JSON json) {
                                 tweet.retweeted = true;
                                 btnRetweet.setColorFilter(Color.rgb(23, 191, 99));
+                                tweet.retweet_count++;
+                                tvRetweetCount.setText(String.valueOf(tweet.retweet_count));
                             }
 
                             @Override
                             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                                Log.e("RetweetTweet", "failure to retweet tweet");
+                                Log.e("RetweetTweet", "failure to retweet tweet" + tweet.id + response);
                             }
                         });
                     }
@@ -254,6 +264,8 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                             public void onSuccess(int statusCode, Headers headers, JSON json) {
                                 tweet.retweeted = false;
                                 btnRetweet.setColorFilter(Color.rgb(170, 184, 194));
+                                tweet.retweet_count--;
+                                tvRetweetCount.setText(String.valueOf(tweet.retweet_count));
                             }
 
                             @Override
@@ -271,6 +283,15 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                     Intent i = new Intent(context, ComposeActivity.class);
                     i.putExtra("reply", true);
                     i.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
+                    context.startActivity(i);
+                }
+            });
+
+            ivProfileImage.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(context, ProfileActivity.class);
+                    i.putExtra(User.class.getSimpleName(), Parcels.wrap(tweet.user));
                     context.startActivity(i);
                 }
             });
