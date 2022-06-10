@@ -52,7 +52,7 @@ Here's a walkthrough of implemented user stories:
 
 ![](ezgif.com-gif-maker.gif)
 
-![](ezgif.com-gif-maker (1).gif)
+![](ezgif.com-gif-maker2.gif)
 
 ## Notes
 
